@@ -10,6 +10,10 @@ Compile and install using cabal:
 
 This will compile hspresent, and install an `hspresent` command line program.
 
+You can download the latest stable release of hspresent on
+[Hackage](http://hackage.haskell.org/package/hspresent). The git repository is
+online at `git://github.com/eklitzke/hspresent.git`.
+
 Usage
 -----
 Invoke like `hspresent /path/to/your/presentation`. Left and right arrow keys
