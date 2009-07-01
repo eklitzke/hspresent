@@ -10,4 +10,20 @@ Compile and install using cabal:
 
 This will compile hspresent, and install an `hspresent` command line program.
 
-There's a simple example presentation included, see `example.txt`.
+Usage
+-----
+Invoke like `hspresent /path/to/your/presentation`. Left and right arrow keys
+move between slides, and hitting `q` or `Ctrl-C` quits the presentation.
+
+The file format is really simple right now. Slides are separated by lines
+consisting of the characters `--`. That's it. Here's an example presentation:
+    the title of the first slide
+    this is
+    really cool
+    --
+    the title of the second slide
+    hooray for hspresent
+    --
+    look at how fancy the title to this slide is
+    * bullet point one
+    * bullet point two

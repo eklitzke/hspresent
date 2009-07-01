@@ -5,17 +5,21 @@ import System.IO
 import Data.ByteString.Char8 (pack)
 import Graphics.Vty
 
+-- |Split an input list
 split :: Eq a => [a] -> [[a]] -> [[[a]]]
 split _ [] = [[]]
 split tok (x:xs)
       | tok == x  = [] : split tok xs
       | otherwise = let (x':xs') = split tok xs in (x:x') : xs'
 
+-- |Render a string as an Image, and right pad it with some character.
 bsLine :: String -> Char -> Int -> Image
 bsLine txt fill width = renderBS attr $ pack txt'
     where
       txt' = ' ' : txt ++ (replicate (width - length txt - 2) fill)
 
+-- |Take a Vty and a list of frames, and do the presentation; this function
+-- terminates when q or Ctrl-C are entered.
 loop :: Vty -> [[String]] -> IO ()
 loop vty frames = loop' 0
     where

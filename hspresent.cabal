@@ -4,6 +4,7 @@ Name:          hspresent
 Version:       0.1
 Cabal-Version: >= 1.2
 License:       BSD3
+License-File:  LICENSE
 Category:      Applications
 Copyright:     (c) 2009 by Evan Klitzke
 Synopsis:      A terminal presentation tool
