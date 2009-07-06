@@ -75,6 +75,7 @@ loop vty pres = loop' minFrame
                            EvKey (KASCII 'q') _       -> return ()
                            EvKey (KASCII 'c') [MCtrl] -> return ()
                            EvKey (KASCII 'r') _ -> blankVty vty >> loop' n
+                           EvResize _ _   -> blankVty vty >> loop' n
                            _              -> eventLoop
 
 -- |Sometimes the vty module gets confused and leaves artifacts from previous
@@ -91,7 +92,8 @@ blankVty vty = do
 makeFrames :: String -> Presentation
 makeFrames xs = listArray (1, length frames) frames
     where
-      frames = concatMap copyFrames $ basicSplit xs
+      frames = filter (\p -> head (head p) /= '#') frames'
+      frames' = concatMap copyFrames $ basicSplit xs
       basicSplit = split "--" . lines
       copyFrames = cf [] . split "."
       cf _ [] = []

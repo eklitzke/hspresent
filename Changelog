@@ -1,0 +1,5 @@
+0.2.1 2009-07-06
+ - Fix a regression in 0.2.0 where resizing the window didn't cause the
+   display to be redrawn.
+ - New feature: if the first character of a frame is #, then the entire frame
+   will be commented out and not rendered.
