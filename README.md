@@ -20,9 +20,13 @@ Invoke like `hspresent /path/to/your/presentation`. Left and right arrow keys
 move between slides, and hitting `q` or `Ctrl-C` quits the presentation.
 
 The file format is really simple right now. Slides are separated by lines
-consisting of the characters `--`. That's it. Here's an example presentation:
+consisting of the characters `--`. You can put the single character `.` on a
+line to demarcate a "split" frame. A split frame really creates a new frame with
+the contents of the previous frame copied at the front (this is similar to how
+beamer works). That's it. Here's an example presentation:
     the title of the first slide
     this is
+    .
     really cool
     --
     the title of the second slide
