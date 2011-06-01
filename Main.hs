@@ -3,7 +3,6 @@ import System.Exit
 import System.IO
 import Data.Array.IArray
 
-import Data.ByteString.Char8 (pack)
 import Graphics.Vty
 
 -- pad left fills the left side with pad chars, pad right fills the right side
@@ -32,16 +31,14 @@ split tok (x:xs)
       | tok == x  = [] : split tok xs
       | otherwise = let (x':xs') = split tok xs in (x:x') : xs'
 
--- |Convert a string to an image
-toImage :: String -> Image
-toImage = renderBS attr . pack
-
 -- |Render a frame. The first pair of Ints is the tuple (screen width, screen
 -- height), the second pair of Ints is the two numbers to display in the lower
 -- right corner, likely the tuple (slide num, total slides).
-renderFrame :: Frame -> (Int, Int) -> (Int, Int) -> Image
-renderFrame (title:body) (w, h) (num, tot) = vertcat $ map toImage text
+renderFrame :: Frame -> DisplayRegion -> (Int, Int) -> Image
+renderFrame (title:body) (DisplayRegion w' h') (num, tot) = vert_cat $ map (string def_attr) text
     where
+      w = fromIntegral w'
+      h = fromIntegral h'
       p = newPad ' ' w
       t = padRight p (' ' : title)
       sep = replicate w '-'
@@ -60,13 +57,12 @@ loop vty pres = loop' minFrame
       (minFrame, maxFrame) = bounds pres
       loop' n = do
         let frame = pres ! n
-        dims <- getSize vty
+        dims <- display_bounds (terminal vty)
         blankVty vty
-        update vty $ pic { pCursor = NoCursor,
-                           pImage  = renderFrame frame dims (n, maxFrame) }
+        update vty $ (pic_for_image (renderFrame frame dims (n, maxFrame))) { pic_cursor = NoCursor }
         eventLoop
         where
-          eventLoop = do ev <- getEvent vty
+          eventLoop = do ev <- next_event vty
                          case ev of
                            EvKey KLeft _  -> loop' (max minFrame (n-1))
                            EvKey KRight _ -> loop' (min maxFrame (n+1))
@@ -82,10 +78,11 @@ loop vty pres = loop' minFrame
 -- slides on the screen. Calling blankvty a few times seems to fix this.
 blankVty :: Vty -> IO ()
 blankVty vty = do
-  (w, h) <- getSize vty
+  (DisplayRegion w' h') <- display_bounds (terminal vty)
+  let w = fromIntegral w'
+  let h = fromIntegral h'
   let lines = [replicate w ' ' | _ <- [1..h]]
-  update vty $ pic { pCursor = NoCursor
-                   , pImage = vertcat $ map toImage lines}
+  update vty $ (pic_for_image (vert_cat $ map (string def_attr) lines)) { pic_cursor = NoCursor }
   refresh vty
 
 -- |Parse an input file, representing a presentation, into a presentation

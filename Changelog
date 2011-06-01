@@ -3,3 +3,6 @@
    display to be redrawn.
  - New feature: if the first character of a frame is #, then the entire frame
    will be commented out and not rendered.
+
+0.2.3
+ - Moved to the new vty
